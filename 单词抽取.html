@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+<style type="text/css">
+body {background-color:black;}
+h1 {
+    color:orange;
+	text-align:center;
+}
+p,table{
+    color:white;
+    font-size:20px;
+	text-align:center;
+}
+input{
+	color:black;
+	outline-style: none ;
+    border: 1px solid #ccc; 
+    border-radius: 3px;
+    padding: 10px 10px;
+    width: 200px;
+    font-size: 20px;
+	text-align:center;
+}
+
+</style>
+
+<script>
+var gamestart=0;
+var playername="Tom";
+var cuowu=0;
+var zhengque=[],cuowu=[];
+var ary=[];
+var num=0;
+
+function checkanswer()
+{	if(ary.length<=1){
+		document.getElementById("wordsnum").innerHTML="请先输入抽测单词表";
+		document.getElementById("shuru").value="";
+		document.getElementById("shuru").style.display="none";
+		document.getElementById("tishi").style.display="none";
+		return;
+		}
+
+    if(gamestart==0){
+		
+		playername=document.getElementById("shuru").value;
+		if(playername.length==0){
+			document.getElementById("tishi").innerHTML="请输入名字"; 
+			return;
+		}
+		gamestart=1;
+		cuowu=[];zhengque=[];
+		document.getElementById("qianyige").innerHTML="--------------";
+		document.getElementById("jieguo").innerHTML=playername+"的测试开始了";
+		document.getElementById("dancibiao").style.display="none";
+		document.getElementById("cuocibiao").style.display="none";
+		document.getElementById("duicibiao").style.display="none";
+		document.getElementById("zhengwu").style.display="";
+
+	}else{
+		document.getElementById("qianyige").innerHTML=ary[2*i]+" "+ary[2*i+1];
+		if(document.getElementById("shuru").value==ary[2*i]){
+			zhengque.push(ary[2*i],ary[2*i+1]);
+			document.getElementById("jieguo").innerHTML="(๑•̀ㅂ•́)و✧";
+			}else{
+			document.getElementById("jieguo").innerHTML="o(≧口≦)o";
+			cuowu.push(ary[2*i],ary[2*i+1]);
+		}
+			ary.splice(2*i,2);
+			
+	}
+	
+	num--;
+	if(ary.length>1){
+	i=choudanci(ary);
+	document.getElementById("tishi").innerHTML=ary[2*i+1];
+	}else{
+		cuocibiao();
+		duicibiao()
+		gamestart=0;
+		document.getElementById("qianyige").innerHTML=playername+"的最终成绩";
+		document.getElementById("jieguo").innerHTML="正确"+zhengque.length/2+"个||错误"+cuowu.length/2+"个";
+		document.getElementById("tishi").innerHTML="输入新的名字再次开始";
+		document.getElementById("dancibiao").style.display="";
+		document.getElementById("zhengwu").style.display="none";
+		num=0;
+
+	}
+	document.getElementById("shuru").value="";
+	document.getElementById("zhengwu").innerHTML=zhengque.length/2+":"+cuowu.length/2;
+	document.getElementById("wordsnum").innerHTML="剩余单词数："+num;
+	return;
+}
+
+function choudanci(arr){
+	var t=ary.length;
+	if(ary.length%2!=0)t--;
+	var m=Math.floor((Math.random()*t));
+	return Math.floor(m/2);
+}
+
+function dancibiao(){
+	var str=document.getElementById("dancibiao").value
+	ary=str.split(/\s+|\n+/);
+	document.getElementById("dancibiao").value="";
+	num=Math.floor(ary.length/2);
+	document.getElementById("wordsnum").innerHTML="总计单词数："+num;
+	
+	if(num>0){
+		document.getElementById("shuru").style.display="";
+		document.getElementById("tishi").style.display="";
+		document.getElementById("tishi").style.display="";
+	}
+}
+
+
+function cuocibiao(){
+	var str='';
+	for(var i=0;i*2<cuowu.length-1;i++){
+	str+='<tr>'+'<td>'+(i+1)+'</td>'+'<td>'+cuowu[2*i]+'</td>'+'<td>'+cuowu[2*i+1]+'</td>'+'</tr>';
+	}
+	cuoci.innerHTML=str;
+	document.getElementById("cuocibiao").style.display="";
+}
+function duicibiao(){
+	var str='';
+	for(var i=0;i*2<zhengque.length-1;i++){
+	str+='<tr>'+'<td>'+(i+1)+'</td>'+'<td>'+zhengque[2*i]+'</td>'+'<td>'+zhengque[2*i+1]+'</td>'+'</tr>';
+	}
+	duici.innerHTML=str;
+	document.getElementById("duicibiao").style.display="";
+}
+
+</script>
+
+
+
+<meta charset="utf-8">
+<title>单词抽取器</title>
+<!-- made by HOCYI -->
+</head>
+<body>
+<div style="text-align:center">
+    <h1>单词抽取器</h1>
+	<p id="qianyige">--------------</p>
+	<p id="jieguo">测试尚未开始</p>
+    <p id="tishi" style="display:none" >输入名字开始测试</p>
+	<input id="shuru" type="text" style="display:none" onkeydown="if(event.keyCode==13) {checkanswer()}"/><br/>
+	<p id="wordsnum">下方输入抽测单词表</p>
+	<input id="dancibiao" type="text" onkeydown="if(event.keyCode==13) {dancibiao()}"/><br/>
+	<p id="zhengwu" style="display:none;font-size: 40px">------</p>
+
+	<table id="cuocibiao" style="display:none" align="center">
+		<tr>
+		<thead>
+			<th>序号</th>
+			<th>错词</th>
+			<th>含义</th>
+		</thead>
+		</tr>
+		<tbody id="cuoci"></tbody>
+	</table>
+	<br/>
+
+	<table id="duicibiao" style="display:none" align="center">
+		<tr>
+		<thead>
+			<th>序号</th>
+			<th>单词</th>
+			<th>含义</th>
+		</thead>
+		</tr>
+		<tbody id="duici"></tbody>
+	</table>
+	
+	
+	
+</div>
+</body>
+</html>
